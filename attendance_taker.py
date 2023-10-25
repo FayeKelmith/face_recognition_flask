@@ -7,7 +7,7 @@ import time
 import logging
 import sqlite3
 import datetime
-from database import addAttendee
+from database import addAttendee, getAttendee
 
 
 # Dlib  / Use frontal face detector of Dlib
@@ -20,22 +20,6 @@ predictor = dlib.shape_predictor(
 # Dlib Resnet Use Dlib resnet50 model to get 128D face descriptor
 face_reco_model = dlib.face_recognition_model_v1(
     "data/data_dlib/dlib_face_recognition_resnet_model_v1.dat")
-
-# Create a connection to the database
-conn = sqlite3.connect("attendance.db")
-cursor = conn.cursor()
-
-# Create a table for the current date
-current_date = datetime.datetime.now().strftime(
-    "%Y_%m_%d")  # Replace hyphens with underscores
-table_name = "attendance"
-create_table_sql = f"CREATE TABLE IF NOT EXISTS {table_name} (name TEXT, time TEXT, date DATE, UNIQUE(name, date))"
-cursor.execute(create_table_sql)
-
-
-# Commit changes and close the connection
-conn.commit()
-conn.close()
 
 
 class Face_Recognizer:
@@ -84,7 +68,12 @@ class Face_Recognizer:
         self.reclassify_interval_cnt = 0
         self.reclassify_interval = 10
 
+        # Camera location information
+        self.camera_location = 1
+
+        # TODO: this variable will be updated as a function of what camera detects a known face.
     #  "features_all.csv"  / Get known faces from "features_all.csv"
+
     def get_face_database(self):
         if os.path.exists("data/features_all.csv"):
             path_features_known_csv = "data/features_all.csv"
@@ -166,26 +155,21 @@ class Face_Recognizer:
 
     def attendance(self, name):
         current_date = datetime.datetime.now().strftime('%Y-%m-%d')
-        conn = sqlite3.connect("attendance.db")
-        cursor = conn.cursor()
-        # Check if the name already has an entry for the current date
-        cursor.execute(
-            "SELECT * FROM attendance WHERE name = ? AND date = ?", (name, current_date))
-        existing_entry = cursor.fetchone()
 
-        if existing_entry:
-            print(f"{name} is already marked as present for {current_date}")
-        else:
-            addAttendee(name=name, location=0)
+        existing_entry = getAttendee(name=name, day=current_date)
+        print("Existing entry", existing_entry)
+        if existing_entry == 0:
+            # TODO: add Camera location
+            print("Marking...")
+            addAttendee(name=name, location=self.camera_location)
             current_time = datetime.datetime.now().strftime('%H:%M:%S')
-            cursor.execute("INSERT INTO attendance (name, time, date) VALUES (?, ?, ?)",
-                           (name, current_time, current_date))
-            conn.commit()
-            print(f"{name} marked as present for {current_date} at {current_time}")
 
-        conn.close()
+            print(f"{name} marked as present for {current_date} at {current_time}")
+        else:
+            print(f"{name} is already marked as present for {current_date}")
 
     #  Face detection and recognition wit OT from input video stream
+
     def process(self, stream):
         # 1.  Get faces known from "features.all.csv"
         if self.get_face_database():
