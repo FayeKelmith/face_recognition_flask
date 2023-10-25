@@ -7,6 +7,7 @@ import time
 import logging
 import sqlite3
 import datetime
+from database import addAttendee
 
 
 # Dlib  / Use frontal face detector of Dlib
@@ -175,6 +176,7 @@ class Face_Recognizer:
         if existing_entry:
             print(f"{name} is already marked as present for {current_date}")
         else:
+            addAttendee(name=name, location=0)
             current_time = datetime.datetime.now().strftime('%H:%M:%S')
             cursor.execute("INSERT INTO attendance (name, time, date) VALUES (?, ?, ?)",
                            (name, current_time, current_date))

@@ -16,9 +16,9 @@ detector = dlib.get_frontal_face_detector()
 class Face_Register:
     def __init__(self):
 
-        self.current_frame_faces_cnt = 0  #  cnt for counting faces in current frame
+        self.current_frame_faces_cnt = 0  # cnt for counting faces in current frame
         self.existing_faces_cnt = 0  # cnt for counting saved faces
-        self.ss_cnt = 0  #  cnt for screen shots
+        self.ss_cnt = 0  # cnt for screen shots
 
         # Tkinter GUI
         self.win = tk.Tk()
@@ -35,17 +35,22 @@ class Face_Register:
 
         # GUI right part
         self.frame_right_info = tk.Frame(self.win)
-        self.label_cnt_face_in_database = tk.Label(self.frame_right_info, text=str(self.existing_faces_cnt))
+        self.label_cnt_face_in_database = tk.Label(
+            self.frame_right_info, text=str(self.existing_faces_cnt))
         self.label_fps_info = tk.Label(self.frame_right_info, text="")
         self.input_name = tk.Entry(self.frame_right_info)
         self.input_name_char = ""
         self.label_warning = tk.Label(self.frame_right_info)
-        self.label_face_cnt = tk.Label(self.frame_right_info, text="Faces in current frame: ")
+        self.label_face_cnt = tk.Label(
+            self.frame_right_info, text="Faces in current frame: ")
         self.log_all = tk.Label(self.frame_right_info)
 
-        self.font_title = tkFont.Font(family='Helvetica', size=20, weight='bold')
-        self.font_step_title = tkFont.Font(family='Helvetica', size=15, weight='bold')
-        self.font_warning = tkFont.Font(family='Helvetica', size=15, weight='bold')
+        self.font_title = tkFont.Font(
+            family='Helvetica', size=20, weight='bold')
+        self.font_step_title = tkFont.Font(
+            family='Helvetica', size=15, weight='bold')
+        self.font_warning = tkFont.Font(
+            family='Helvetica', size=15, weight='bold')
 
         self.path_photos_from_camera = "data/data_faces_from_camera/"
         self.current_face_dir = ""
@@ -97,17 +102,22 @@ class Face_Register:
                  text="Face register",
                  font=self.font_title).grid(row=0, column=0, columnspan=3, sticky=tk.W, padx=2, pady=20)
 
-        tk.Label(self.frame_right_info, text="FPS: ").grid(row=1, column=0, sticky=tk.W, padx=5, pady=2)
+        tk.Label(self.frame_right_info, text="FPS: ").grid(
+            row=1, column=0, sticky=tk.W, padx=5, pady=2)
         self.label_fps_info.grid(row=1, column=1, sticky=tk.W, padx=5, pady=2)
 
-        tk.Label(self.frame_right_info, text="Faces in database: ").grid(row=2, column=0, sticky=tk.W, padx=5, pady=2)
-        self.label_cnt_face_in_database.grid(row=2, column=1, sticky=tk.W, padx=5, pady=2)
+        tk.Label(self.frame_right_info, text="Faces in database: ").grid(
+            row=2, column=0, sticky=tk.W, padx=5, pady=2)
+        self.label_cnt_face_in_database.grid(
+            row=2, column=1, sticky=tk.W, padx=5, pady=2)
 
         tk.Label(self.frame_right_info,
                  text="Faces in current frame: ").grid(row=3, column=0, columnspan=2, sticky=tk.W, padx=5, pady=2)
-        self.label_face_cnt.grid(row=3, column=2, columnspan=3, sticky=tk.W, padx=5, pady=2)
+        self.label_face_cnt.grid(
+            row=3, column=2, columnspan=3, sticky=tk.W, padx=5, pady=2)
 
-        self.label_warning.grid(row=4, column=0, columnspan=3, sticky=tk.W, padx=5, pady=2)
+        self.label_warning.grid(
+            row=4, column=0, columnspan=3, sticky=tk.W, padx=5, pady=2)
 
         # Step 1: Clear old data
         tk.Label(self.frame_right_info,
@@ -122,7 +132,8 @@ class Face_Register:
                  font=self.font_step_title,
                  text="Step 2: Input name").grid(row=7, column=0, columnspan=2, sticky=tk.W, padx=5, pady=20)
 
-        tk.Label(self.frame_right_info, text="Name: ").grid(row=8, column=0, sticky=tk.W, padx=5, pady=0)
+        tk.Label(self.frame_right_info, text="Name: ").grid(
+            row=8, column=0, sticky=tk.W, padx=5, pady=0)
         self.input_name.grid(row=8, column=1, sticky=tk.W, padx=0, pady=2)
 
         tk.Button(self.frame_right_info,
@@ -139,7 +150,8 @@ class Face_Register:
                   command=self.save_current_face).grid(row=10, column=0, columnspan=3, sticky=tk.W)
 
         # Show log in GUI
-        self.log_all.grid(row=11, column=0, columnspan=20, sticky=tk.W, padx=5, pady=20)
+        self.log_all.grid(row=11, column=0, columnspan=20,
+                          sticky=tk.W, padx=5, pady=20)
 
         self.frame_right_info.pack()
 
@@ -184,16 +196,16 @@ class Face_Register:
         self.existing_faces_cnt += 1
         if self.input_name_char:
             self.current_face_dir = self.path_photos_from_camera + \
-                                    "person_" + str(self.existing_faces_cnt) + "_" + \
-                                    self.input_name_char
+                "person_" + str(self.existing_faces_cnt) + "_" + \
+                self.input_name_char
         else:
             self.current_face_dir = self.path_photos_from_camera + \
-                                    "person_" + str(self.existing_faces_cnt)
+                "person_" + str(self.existing_faces_cnt)
         os.makedirs(self.current_face_dir)
         self.log_all["text"] = "\"" + self.current_face_dir + "/\" created!"
         logging.info("\n%-40s %s", "Create folders:", self.current_face_dir)
 
-        self.ss_cnt = 0  #  Clear the cnt of screen shots
+        self.ss_cnt = 0  # Clear the cnt of screen shots
         self.face_folder_created_flag = True  # Face folder already created
 
     def save_current_face(self):
@@ -210,9 +222,11 @@ class Face_Register:
                                 self.face_ROI_width_start - self.ww + jj]
                     self.log_all["text"] = "\"" + self.current_face_dir + "/img_face_" + str(
                         self.ss_cnt) + ".jpg\"" + " saved!"
-                    self.face_ROI_image = cv2.cvtColor(self.face_ROI_image, cv2.COLOR_BGR2RGB)
+                    self.face_ROI_image = cv2.cvtColor(
+                        self.face_ROI_image, cv2.COLOR_BGR2RGB)
 
-                    cv2.imwrite(self.current_face_dir + "/img_face_" + str(self.ss_cnt) + ".jpg", self.face_ROI_image)
+                    cv2.imwrite(self.current_face_dir + "/img_face_" +
+                                str(self.ss_cnt) + ".jpg", self.face_ROI_image)
                     logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
                                  str(self.current_face_dir), str(self.ss_cnt) + ".jpg")
                 else:
@@ -226,7 +240,7 @@ class Face_Register:
         try:
             if self.cap.isOpened():
                 ret, frame = self.cap.read()
-                frame = cv2.resize(frame, (640,480))
+                frame = cv2.resize(frame, (640, 480))
                 return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         except:
             print("Error: No video input!!!")
@@ -263,8 +277,10 @@ class Face_Register:
                         self.label_warning["text"] = ""
                         color_rectangle = (255, 255, 255)
                     self.current_frame = cv2.rectangle(self.current_frame,
-                                                       tuple([d.left() - self.ww, d.top() - self.hh]),
-                                                       tuple([d.right() + self.ww, d.bottom() + self.hh]),
+                                                       tuple(
+                                                           [d.left() - self.ww, d.top() - self.hh]),
+                                                       tuple(
+                                                           [d.right() + self.ww, d.bottom() + self.hh]),
                                                        color_rectangle, 2)
             self.current_frame_faces_cnt = len(faces)
 
