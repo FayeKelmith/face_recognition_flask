@@ -10,7 +10,7 @@ from supabase import create_client, Client
 url = "https://augbubllerfwdiqvpdfx.supabase.co"
 key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1Z2J1YmxsZXJmd2RpcXZwZGZ4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5ODA1NTIyNCwiZXhwIjoyMDEzNjMxMjI0fQ.F0dJnaiXNxOo9oN4zLeXzKQPthImaDNemO7x0cJJHIg"
 
-
+bucket_name: str = ""
 supabase: Client = create_client(url, key)
 
 

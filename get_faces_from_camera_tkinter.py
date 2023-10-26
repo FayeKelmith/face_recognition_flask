@@ -52,7 +52,8 @@ class Face_Register:
         self.font_warning = tkFont.Font(
             family='Helvetica', size=15, weight='bold')
 
-        self.path_photos_from_camera = "data/data_faces_from_camera/"
+        self.path_photos_from_camera = "data/data_faces_from_camera/"\
+            # FIXME: Set up path to supabase storage
         self.current_face_dir = ""
         self.font = cv2.FONT_ITALIC
 
@@ -155,6 +156,7 @@ class Face_Register:
 
         self.frame_right_info.pack()
 
+        # BUG: Fix this to create folder in supabase
     # Mkdir for saving photos and csv
     def pre_work_mkdir(self):
         # Create folders to save face images and csv
@@ -164,9 +166,12 @@ class Face_Register:
             os.mkdir(self.path_photos_from_camera)
 
     # Start from person_x+1
+    # FIXME: Check Existing faces in supabase.
     def check_existing_faces_cnt(self):
+        # FIXME: Correct the path here
         if os.listdir("data/data_faces_from_camera/"):
             # Get the order of latest person
+            # FIXME: Correct path here
             person_list = os.listdir("data/data_faces_from_camera/")
             person_num_list = []
             for person in person_list:
@@ -191,14 +196,17 @@ class Face_Register:
 
         self.label_fps_info["text"] = str(self.fps.__round__(2))
 
+        # FIXME: Create face in supabase only
     def create_face_folder(self):
         #  Create the folders for saving faces
         self.existing_faces_cnt += 1
         if self.input_name_char:
+            # NOTE: Folder making here
             self.current_face_dir = self.path_photos_from_camera + \
                 "person_" + str(self.existing_faces_cnt) + "_" + \
                 self.input_name_char
         else:
+            # NOTE: Folder making here.
             self.current_face_dir = self.path_photos_from_camera + \
                 "person_" + str(self.existing_faces_cnt)
         os.makedirs(self.current_face_dir)
