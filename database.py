@@ -1,4 +1,4 @@
-
+import datetime
 import os
 from supabase import create_client, Client
 
@@ -25,3 +25,21 @@ def getAttendee(name, day):
     request = supabase.table('attendees').select(
         "*").eq("name", name).eq("day", day).execute()
     return len(request.data)
+
+
+def getRegisteredAttendees(day):
+    request = supabase.table('attendees').select(
+        'name,date').eq("day", day).execute()
+
+    if (len(request.data) > 0):
+        attendees = request.data
+        for attendee in attendees:
+            timestamp = attendee['date']
+            dt = datetime.datetime.fromisoformat(
+                timestamp) + datetime.timedelta(hours=5, minutes=30)
+            time = dt.strftime('%H:%M:%S')
+            attendee['date'] = time
+
+        return attendees
+
+    return []
