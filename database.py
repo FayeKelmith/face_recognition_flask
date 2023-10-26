@@ -29,7 +29,7 @@ def getAttendee(name, day):
 
 def getRegisteredAttendees(day):
     request = supabase.table('attendees').select(
-        'name,date').eq("day", day).execute()
+        'name,date,location').eq("day", day).execute()
 
     if (len(request.data) > 0):
         attendees = request.data
